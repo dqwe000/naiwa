@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="pjasqPktUxpoY36CZpnAIN">
+<head data-page-node-id="ohbrnWokfUIoeunf4yIRUe">
+<meta charset="UTF-8" data-page-node-id="WhqH73gPMZCvQhnABWPZ6G" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" data-page-node-id="A0Gt4RdZuXaAXmqvJiW0Xd" />
+<title>奶蛙挖宝 · 黄金矿工版</title>
+<style>
+  :root{
+    --bg1:#fdf6dc; --bg2:#e8f5d8; --card:#fffdf5;
+    --green:#7cb342; --green-d:#5a9e2f; --yellow:#ffc93c; --text:#4d4636;
+    --shadow:rgba(124,179,66,.35);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    background:linear-gradient(160deg,var(--bg1),var(--bg2));
+    color:var(--text);display:flex;align-items:center;justify-content:center;
+    min-height:100vh;padding:12px;overflow-x:hidden;
+  }
+  .app{width:100%;max-width:430px;background:var(--card);border-radius:28px;
+    box-shadow:0 18px 50px var(--shadow);padding:14px;position:relative;overflow:hidden;}
+  .title{font-size:19px;font-weight:800;text-align:center;margin-bottom:8px;}
+  .title small{display:block;font-size:11px;font-weight:600;color:var(--green-d);opacity:.85;}
+  .hud{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;}
+  .hud .box{background:#f7fbee;border:2px solid #e2efcd;border-radius:14px;padding:6px 4px;text-align:center;}
+  .hud .k{font-size:10px;font-weight:700;opacity:.7;}
+  .hud .v{font-size:15px;font-weight:800;color:var(--green-d);}
+  .timewrap{height:10px;background:#e7f2d5;border-radius:6px;overflow:hidden;margin-bottom:8px;}
+  .timebar{height:100%;width:100%;background:linear-gradient(90deg,#8bc34a,#5a9e2f);transition:width .2s;}
+  canvas{display:block;width:100%;max-width:400px;margin:0 auto;border-radius:18px;
+    background:linear-gradient(180deg,#cfe8b6 0%,#cfe8b6 14%,#9c7a4d 14%,#6e4f2e 100%);
+    touch-action:none;cursor:pointer;}
+  .hint{text-align:center;font-size:11px;opacity:.55;margin-top:8px;}
+
+  .overlay{position:absolute;inset:0;background:rgba(253,250,235,.97);
+    display:none;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px;border-radius:28px;z-index:10;}
+  .overlay.show{display:flex;}
+  .overlay h2{margin:0 0 6px;font-size:26px;color:var(--green-d);}
+  .overlay p{margin:4px 0;font-size:14px;line-height:1.5;}
+  .big{font-size:34px;font-weight:800;color:#ffa726;margin:6px 0 10px;}
+  .btn{background:linear-gradient(135deg,#8bc34a,#689f38);color:#fff;border:none;
+    padding:12px 28px;border-radius:20px;font-size:15px;font-weight:800;cursor:pointer;
+    box-shadow:0 6px 0 #577f2c;margin-top:10px;}
+  .btn:active{transform:translateY(3px);box-shadow:0 3px 0 #577f2c;}
+  .btn.alt{background:linear-gradient(135deg,#ffc93c,#ffa726);box-shadow:0 6px 0 #e07d1f;}
+  .shop{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;margin-top:8px;}
+  .shop .item{display:flex;align-items:center;justify-content:space-between;
+    background:#f7fbee;border:2px solid #e2efcd;border-radius:16px;padding:10px 14px;}
+  .shop .item .t{text-align:left;}
+  .shop .item .t b{display:block;font-size:14px;}
+  .shop .item .t span{font-size:11px;opacity:.65;}
+  .buy{background:linear-gradient(135deg,#ffc93c,#ffa726);color:#fff;border:none;
+    border-radius:12px;padding:8px 14px;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;}
+  .buy:disabled{opacity:.4;cursor:not-allowed;}
+</style>
+</head>
+<body data-page-node-id="2fvyAJZeiMXmu6lMiz4R1v">
+<div class="app" data-page-node-id="xwBLS1Kmloe5CNAOJNWIYO">
+  <div class="title" data-page-node-id="TPWdEq0jGv3DZXE4VG76JS">奶蛙挖宝 <small data-page-node-id="NTPsJYbZtHUmJeWAzQoAPu">黄金矿工玩法 · 甩钩抓宝，限时达标 🐸⛏️</small></div>
+
+  <div class="hud" data-page-node-id="C5dYosOt9KSb9Yca6aeERS">
+    <div class="box" data-page-node-id="feLhvwHMCpEaC41zdH6Pfm"><div class="k" data-page-node-id="YaRlGofoyVAxx9cGRRhhAT">关卡</div><div class="v" id="hLevel" data-page-node-id="I5OhPorYPaMV4NmFGDHTIA">1</div></div>
+    <div class="box" data-page-node-id="8K2PGxxjfQRf7wm7Kqylye"><div class="k" data-page-node-id="iZN131Xb2ahOJxfMb3uA3U">💰 金钱</div><div class="v" id="hMoney" data-page-node-id="I595mlHEcW4WsjGt3ADG0B">0</div></div>
+    <div class="box" data-page-node-id="bwSqR4owx9exflBsFKANVZ"><div class="k" data-page-node-id="q5jKoAoHnwRyz4ADd7J3Wc">🎯 目标</div><div class="v" id="hTarget" data-page-node-id="MD0im8wmDNlNk8AFhIs4bx">300</div></div>
+    <div class="box" data-page-node-id="em6mphLN2s02RCrHrSeQdl"><div class="k" data-page-node-id="m4g4TaIBUGHEKDSav25CO4">⏱ 时间</div><div class="v" id="hTime" data-page-node-id="9PADhm95HDGxcFSIIrWlBF">60</div></div>
+  </div>
+  <div class="timewrap" data-page-node-id="ozz2hk8hwiouVw49QphjT1"><div class="timebar" id="timebar" data-page-node-id="RYplFFwryMCi3AU5ROFA3y"></div></div>
+
+  <canvas id="game" width="400" height="560" data-page-node-id="CS8fpF1dRjzlopEcyw5Sb0"></canvas>
+  <div class="hint" data-page-node-id="5zOmurnoZzI4WU4ehnrul1">点击屏幕 / 空格 / ↓ 甩出钩子 · 抓得越重收回越慢，规划好节奏！</div>
+
+  <div class="overlay show" id="menu" data-page-node-id="GLZHYsY4udSLCMWUaReSIu">
+    <h2 data-page-node-id="9SibmplHLk1eH5BvjlzSI8">🐸 奶蛙挖宝</h2>
+    <p data-page-node-id="HaGakfdrRQCH4dtOGeI6pF">小奶蛙下地挖宝啦！摆动钩子，瞅准时机甩出去，<br data-page-node-id="d29E7jAnEwOp7TWe9dBWeb">把金币、钻石、奶砖全抓上来。</p>
+    <p style="opacity:.7" data-page-node-id="52On89v9gbsZ1r4ZInt2F0">⚠️ 越重的宝收回越慢 · 时间到要够目标钱数过关<br data-page-node-id="ZnQcRos5rq5WkX34v7Aj8H">过关后能花钱升级「力气」和「时间」</p>
+    <button class="btn" id="btnStart" data-page-node-id="OhIh1soiglmVYOolVrn3cz">开始挖宝</button>
+  </div>
+
+  <div class="overlay" id="shop" data-page-node-id="XDHiBZJcBXTFFV2fTDp7A3">
+    <h2 id="shopTitle" data-page-node-id="0vF9IXTqe62z4T8Tg61HA2">第 1 关达成！</h2>
+    <p data-page-node-id="qupl4xgtmbP1PJPGP3vKJj">当前金钱：<b id="shopMoney" data-page-node-id="2ITZGofKZEGrdM6K9GeBLW">0</b></p>
+    <div class="shop" data-page-node-id="tWTxPxELvB58XMGJ2tvHMY">
+      <div class="item" data-page-node-id="dcG7DEugyE3HLekY4xAYDs">
+        <div class="t" data-page-node-id="AsjkznoIAo9S5iZS1zRjIm"><b data-page-node-id="66ULpmso6ANs5VcHeKeW2E">💪 升级力气</b><span data-page-node-id="nTHGLLPO3AFlmVPveIsjMu">收回更快（已 <span id="strLv" data-page-node-id="AE7hCDeKhRebHxBXQAtwFX">0</span> 级）</span></div>
+        <button class="buy" id="buyStr" data-page-node-id="oUmsAAIgC7DSmZSeWOroD6">¥<span id="strCost" data-page-node-id="ItTJtEVCeVwKw47NiH6l3Y">120</span></button>
+      </div>
+      <div class="item" data-page-node-id="QmhyOGMRNxgnez5BQMIoR1">
+        <div class="t" data-page-node-id="Wlh2iIGJd2HtipVKhsMxhD"><b data-page-node-id="YT4YVwoalsEWbufJXdIIYZ">⏱ 加长时间</b><span data-page-node-id="wm9xbFC9k16IA0hAtJXcCW">每关 +6 秒（已 <span id="timeLv" data-page-node-id="6PJsTm6WDvaLAgNACqJwvG">0</span> 次）</span></div>
+        <button class="buy" id="buyTime" data-page-node-id="Wsplj7ue5MgdhnALX9ICbf">¥<span id="timeCost" data-page-node-id="P6231GP1XHHSApzICCMHjN">80</span></button>
+      </div>
+    </div>
+    <button class="btn alt" id="btnNext" data-page-node-id="q31GCUIaFRkr2eFte8ecxk">进入下一关 →</button>
+  </div>
+
+  <div class="overlay" id="over" data-page-node-id="MCeUcgURrvG2JTfA4Y92e5">
+    <h2 data-page-node-id="ISDc0qu7NdiNHBGJ9okg40">游戏结束</h2>
+    <p id="overMsg" data-page-node-id="fbAugyBlipho43k6F6Ihhg">没能在时间内攒够目标钱数…</p>
+    <div class="big" data-page-node-id="1PIpe8PIP7HJpFl8kPzTh6">最终金钱 <span id="finalMoney" data-page-node-id="oXDiv25wJDo2j5n1VS4Gzk">0</span></div>
+    <button class="btn" id="btnRestart" data-page-node-id="E6Wci69WpQFBzhEDkhuu69">重新挖宝</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const W = 400, H = 560;
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const COL = {
+    dirt1:"#9c7a4d", dirt2:"#6e4f2e", sky:"#cfe8b6",
+    frog:"#FFC93c", frogHi:"#FFE08A", frogEye:"#8CC152", frogPupil:"#26221f",
+    hook:"#5a4a3a", claw:"#8a7a6a"
+  };
+
+  const TYPES = {
+    smallGold:{ r:15, value:60,  weight:1.1, emoji:"🪙", bg:"#ffd34d" },
+    bigGold:  { r:26, value:180, weight:3.2, emoji:"💰", bg:"#ffb300" },
+    diamond:  { r:13, value:360, weight:0.8, emoji:"💎", bg:"#7fe3ff" },
+    rock:     { r:22, value:22,  weight:4.2, emoji:"🪨", bg:"#9a958c" },
+    tinyRock: { r:13, value:12,  weight:2.0, emoji:"🪨", bg:"#aaa499" },
+    milk:     { r:16, value:90,  weight:1.0, emoji:"🥛", bg:"#eef6ff" }
+  };
+  const WEIGHTS = [
+    ["smallGold",34],["bigGold",11],["rock",24],["tinyRock",10],
+    ["diamond",9],["milk",12]
+  ];
+  function pickType(){
+    let total = WEIGHTS.reduce((a,b)=>a+b[1],0), r = Math.random()*total;
+    for(const t of WEIGHTS){ if((r-=t[1])<0) return t[0]; }
+    return "smallGold";
+  }
+
+  let state = "menu";
+  let level = 1, money = 0, target = 300, timeLeft = 60;
+  let strengthMult = 1, strBuy = 0, timeBonus = 0, timeBuy = 0;
+  let items = [], carrying = null;
+  const pivot = { x: W/2, y: 96 };
+  const MIN_LEN = 24, MAX_A = 1.22;
+  const SWING_W = 1.7, SHOOT_SPD = 430, PULL_BASE = 320;
+  const hook = { angle: 0, dir: 1, len: MIN_LEN, st: "swing" };
+  let tipX = pivot.x, tipY = pivot.y + MIN_LEN;
+
+  const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+  function tip(){
+    tipX = pivot.x + hook.len * Math.sin(hook.angle);
+    tipY = pivot.y + hook.len * Math.cos(hook.angle);
+  }
+
+  function spawnItems(n){
+    items = [];
+    const count = Math.min(8 + n*2, 22);
+    let tries = 0;
+    while(items.length < count && tries < 600){
+      tries++;
+      const t = pickType();
+      const def = TYPES[t];
+      const x = 30 + def.r + Math.random()*(W-60-def.r*2);
+      const y = 165 + def.r + Math.random()*(H-185-def.r*2);
+      let ok = true;
+      for(const it of items){
+        if(Math.hypot(it.x-x, it.y-y) < it.r + def.r + 10){ ok=false; break; }
+      }
+      if(ok) items.push({ type:t, x, y, r:def.r, value:def.value, weight:def.weight,
+                          emoji:def.emoji, bg:def.bg, caught:false });
+    }
+  }
+
+  function startGame(){
+    level = 1; money = 0; strengthMult = 1; strBuy = 0; timeBonus = 0; timeBuy = 0;
+    startLevel();
+  }
+  function startLevel(){
+    target = 300 + (level-1)*260;
+    timeLeft = 60 + timeBonus;
+    spawnItems(level);
+    hook.angle = 0; hook.dir = 1; hook.len = MIN_LEN; hook.st = "swing"; carrying = null;
+    state = "playing";
+    hideAll(); updateHUD();
+  }
+
+  function drop(){
+    if(state !== "playing") return;
+    if(hook.st === "swing"){ hook.st = "shoot"; }
+  }
+  canvas.addEventListener("pointerdown", e=>{ e.preventDefault(); drop(); });
+  window.addEventListener("keydown", e=>{
+    if(e.code === "Space" || e.code === "ArrowDown"){ e.preventDefault(); drop(); }
+  });
+
+  function update(dt){
+    timeLeft -= dt;
+    if(timeLeft <= 0){ timeLeft = 0; endLevel(); return; }
+
+    if(hook.st === "swing"){
+      hook.angle += hook.dir * SWING_W * dt;
+      if(hook.angle > MAX_A){ hook.angle = MAX_A; hook.dir = -1; }
+      if(hook.angle < -MAX_A){ hook.angle = -MAX_A; hook.dir = 1; }
+      tip();
+    }
+    else if(hook.st === "shoot"){
+      hook.len += SHOOT_SPD * dt; tip();
+      if(tipY >= H-5 || tipX <= 5 || tipX >= W-5){ hook.st = "pull"; return; }
+      for(const it of items){
+        if(it.caught) continue;
+        if(Math.hypot(tipX-it.x, tipY-it.y) < it.r + 6){
+          it.caught = true; carrying = it; hook.st = "pull"; break;
+        }
+      }
+    }
+    else if(hook.st === "pull"){
+      const spd = carrying ? PULL_BASE*strengthMult/carrying.weight : PULL_BASE*1.4;
+      hook.len -= spd * dt; tip();
+      if(hook.len <= MIN_LEN){
+        hook.len = MIN_LEN;
+        if(carrying){
+          money += carrying.value;
+          items = items.filter(x=>x!==carrying);
+          carrying = null;
+        }
+        hook.st = "swing";
+      }
+    }
+  }
+
+  function endLevel(){
+    hook.st = "swing";
+    if(money >= target){ openShop(); }
+    else { gameOver(); }
+  }
+  function gameOver(){
+    state = "over";
+    document.getElementById("overMsg").textContent =
+      "第 "+level+" 关没攒够 ¥"+target+"，小奶蛙空手而归…";
+    document.getElementById("finalMoney").textContent = money;
+    show("over");
+  }
+  function openShop(){
+    state = "shop";
+    document.getElementById("shopTitle").textContent = "第 "+level+" 关达成！🎉";
+    refreshShop(); show("shop");
+  }
+  function refreshShop(){
+    document.getElementById("shopMoney").textContent = money;
+    document.getElementById("strLv").textContent = strBuy;
+    document.getElementById("timeLv").textContent = timeBuy;
+    const sc = 120 + strBuy*90, tc = 80 + timeBuy*60;
+    document.getElementById("strCost").textContent = sc;
+    document.getElementById("timeCost").textContent = tc;
+    const bS = document.getElementById("buyStr"), bT = document.getElementById("buyTime");
+    bS.disabled = money < sc; bT.disabled = money < tc;
+  }
+
+  document.getElementById("buyStr").addEventListener("click", ()=>{
+    const sc = 120 + strBuy*90;
+    if(money >= sc){ money -= sc; strengthMult += 0.22; strBuy++; refreshShop(); }
+  });
+  document.getElementById("buyTime").addEventListener("click", ()=>{
+    const tc = 80 + timeBuy*60;
+    if(money >= tc){ money -= tc; timeBonus += 6; timeBuy++; refreshShop(); }
+  });
+  document.getElementById("btnNext").addEventListener("click", ()=>{ level++; startLevel(); });
+  document.getElementById("btnStart").addEventListener("click", startGame);
+  document.getElementById("btnRestart").addEventListener("click", startGame);
+
+  function drawFrog(){
+    const x = pivot.x, y = 56;
+    ctx.fillStyle = COL.frog;
+    ctx.beginPath(); ctx.ellipse(x, y, 30, 26, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = COL.frogHi;
+    ctx.beginPath(); ctx.ellipse(x-9, y-8, 12, 10, 0, 0, Math.PI*2); ctx.fill();
+    for(const ex of [x-13, x+13]){
+      ctx.fillStyle = COL.frog;
+      ctx.beginPath(); ctx.ellipse(ex, y-22, 11, 12, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath(); ctx.ellipse(ex, y-22, 8, 9, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = COL.frogPupil;
+      ctx.beginPath(); ctx.ellipse(ex, y-21, 4, 5, 0, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.strokeStyle = "#7a4a1f"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.arc(x, y+4, 9, 0.15*Math.PI, 0.85*Math.PI); ctx.stroke();
+    ctx.fillStyle = "rgba(255,140,80,.45)";
+    ctx.beginPath(); ctx.ellipse(x-20, y+4, 6, 4, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x+20, y+4, 6, 4, 0, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = COL.frog; ctx.lineWidth = 6; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(x-14, y+18); ctx.lineTo(x-6, y+26); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x+14, y+18); ctx.lineTo(x+6, y+26); ctx.stroke();
+  }
+  function drawItem(it, x, y){
+    ctx.save();
+    ctx.beginPath(); ctx.arc(x, y, it.r, 0, Math.PI*2);
+    ctx.fillStyle = it.bg; ctx.globalAlpha = 0.9; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.lineWidth = 2; ctx.strokeStyle = "rgba(0,0,0,.18)"; ctx.stroke();
+    ctx.font = (it.r*1.5) + "px serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(it.emoji, x, y+1);
+    ctx.restore();
+  }
+  function drawHook(){
+    ctx.strokeStyle = COL.hook; ctx.lineWidth = 3; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(pivot.x, pivot.y); ctx.lineTo(tipX, tipY); ctx.stroke();
+    ctx.strokeStyle = COL.claw; ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(tipX-7, tipY-4); ctx.lineTo(tipX, tipY+7); ctx.lineTo(tipX+7, tipY-4);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(tipX, tipY-2, 5, Math.PI, 0); ctx.stroke();
+  }
+
+  const specks = [];
+  for(let i=0;i<60;i++){
+    specks.push({ x:Math.random()*W, y:150+Math.random()*(H-150), r:1+Math.random()*2, c:Math.random()<0.5?"#7d5c38":"#b08a55" });
+  }
+  function drawDirt(){
+    for(const s of specks){ ctx.fillStyle = s.c; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill(); }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = COL.sky; ctx.fillRect(0,0,W,150);
+    ctx.fillStyle = "#7cb342"; ctx.fillRect(0,146,W,8);
+    const g = ctx.createLinearGradient(0,154,0,H);
+    g.addColorStop(0, COL.dirt1); g.addColorStop(1, COL.dirt2);
+    ctx.fillStyle = g; ctx.fillRect(0,154,W,H-154);
+    drawDirt();
+    for(const it of items){ if(it!==carrying) drawItem(it, it.x, it.y); }
+    drawHook();
+    if(carrying) drawItem(carrying, tipX, tipY);
+    drawFrog();
+  }
+
+  function updateHUD(){
+    document.getElementById("hLevel").textContent = level;
+    document.getElementById("hMoney").textContent = money;
+    document.getElementById("hTarget").textContent = target;
+    document.getElementById("hTime").textContent = Math.ceil(timeLeft);
+    document.getElementById("timebar").style.width = clamp(timeLeft/(60+timeBonus)*100,0,100)+"%";
+  }
+
+  function show(id){
+    ["menu","shop","over"].forEach(o=>document.getElementById(o).classList.toggle("show", o===id));
+  }
+  function hideAll(){ ["menu","shop","over"].forEach(o=>document.getElementById(o).classList.remove("show")); }
+
+  let last = 0;
+  function frame(t){
+    const dt = last ? Math.min((t-last)/1000, 0.05) : 0;
+    last = t;
+    if(state === "playing"){ update(dt); updateHUD(); }
+    draw();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  draw();
+})();
+</script>
+</body>
+</html>
